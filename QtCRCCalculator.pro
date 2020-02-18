@@ -25,7 +25,8 @@ HEADERS += \
     src/crccalculator/ui/widget/CRCCalculatorWidget.hh
 
 FORMS += \
-    src/MainWindow.ui
+    src/MainWindow.ui \
+    src/crccalculator/ui/widget/CRCCalculatorWidget.ui
 
 UI_DIR      = $$OUT_PWD/ui
 MOC_DIR     = $$OUT_PWD/moc
