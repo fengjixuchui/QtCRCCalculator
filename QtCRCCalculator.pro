@@ -17,10 +17,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     src/MainWindow.cc \
+    src/crccalculator/ui/widget/CRCCalculatorWidget.cc \
     src/main.cc
 
 HEADERS += \
-    src/MainWindow.hh
+    src/MainWindow.hh \
+    src/crccalculator/ui/widget/CRCCalculatorWidget.hh
 
 FORMS += \
     src/MainWindow.ui
