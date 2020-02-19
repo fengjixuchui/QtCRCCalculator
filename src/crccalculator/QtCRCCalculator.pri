@@ -1,3 +1,7 @@
+!contains(QT, qml){
+    QT  += qml
+}
+
 INCLUDEPATH += \
     $$PWD/src/crccalculator/ui/widget/
 
