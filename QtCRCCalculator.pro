@@ -14,19 +14,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+include(src/crccalculator/QtCRCCalculator.pri)
+
+INCLUDEPATH += \
+    src/crccalculator/ui/widget
 
 SOURCES += \
     src/MainWindow.cc \
-    src/crccalculator/ui/widget/CRCCalculatorWidget.cc \
     src/main.cc
 
 HEADERS += \
-    src/MainWindow.hh \
-    src/crccalculator/ui/widget/CRCCalculatorWidget.hh
+    src/MainWindow.hh
 
 FORMS += \
-    src/MainWindow.ui \
-    src/crccalculator/ui/widget/CRCCalculatorWidget.ui
+    src/MainWindow.ui
 
 UI_DIR      = $$OUT_PWD/ui
 MOC_DIR     = $$OUT_PWD/moc
