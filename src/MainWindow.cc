@@ -9,6 +9,8 @@
  * Qt Technical Exchange QQ Group: 723516989
  */
 #include "MainWindow.hh"
+#include "CRCCalculatorWidget.hh"
+
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    CRCCalculatorWidget *centralWidget = new CRCCalculatorWidget(this);
+    setCentralWidget(centralWidget);
+    resize(850, 525);
 }
 
 MainWindow::~MainWindow()
