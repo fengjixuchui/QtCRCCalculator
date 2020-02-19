@@ -1,29 +1,27 @@
 ﻿/*
- * Copyright (C) 2018-2019 wuuhii. All rights reserved.
+ * Copyritht 2020 QTCRCCALCULATOR PROJECT <https://github.com/qter188/QtCRCCalculator>
+ * QtCRCCalculator is licensed according to the terms in the file LICENCE in the root of the source code directory.
  *
- * The file is encoding with utf-8 (with BOM). It is a part of QtSwissArmyKnife
- * project. The project is a open source project, you can get the source from:
- *     https://github.com/qter188/QtSwissArmyKnife
- *     https://gitee.com/qter188/QtSwissArmyKnife
+ * The file is encoding with UTF8 (with BOM). Thanks google translation <https://translate.google.cn>.
  *
- * For more information about the project, please join our QQ group(952218522).
- * In addition, the email address of the project author is qter188@outlook.com.
+ * Bug Report: qter@188.com
+ * User Exchange QQ Group: 952218522
+ * Qt Technical Exchange QQ Group: 723516989
  */
 #include <QMetaEnum>
 
-#include "SAKCRCInterface.hh"
+#include "QtCRCInterface.hh"
 
-
-SAKCRCInterface::SAKCRCInterface(QObject *parent)
-    :QObject (parent)
+QtCRCInterface::QtCRCInterface(QObject *parent)
+    : QObject (parent)
 {
 
 }
 
-QStringList SAKCRCInterface::supportedParameterModels()
+QStringList QtCRCInterface::supportedParameterModels()
 {
-    modelStrings.clear();
-    QMetaEnum models = QMetaEnum::fromType<CRCModel>();
+    QStringList modelStrings;
+    QMetaEnum models = QMetaEnum::fromType<CRCParameterModel>();
 
     const char *ch = nullptr;
     for (int i = 0; i < models.keyCount(); i++) {
@@ -36,18 +34,18 @@ QStringList SAKCRCInterface::supportedParameterModels()
     return modelStrings;
 }
 
-QString SAKCRCInterface::getPolyFormula(SAKCRCInterface::CRCModel model)
+QString QtCRCInterface::polyFormulaString(QtCRCInterface::CRCParameterModel model)
 {
-    QString formula = QString("Error: Formula not found");
+    QString polynomial;
 
     switch (model) {
     case CRC_8:
     case CRC_8_ITU:
     case CRC_8_ROHC:
-        formula = QString("x8 + x2 + x + 1");
+        polynomial = QString("x8+x2+x+1");
         break;
     case CRC_8_MAXIM:
-        formula = QString("x8 + x5 + x4 + 1");
+        polynomial = QString("x8+x5+x4+1");
         break;
     case CRC_16_IBM:
     case CRC_16_MAXIM:
@@ -57,21 +55,24 @@ QString SAKCRCInterface::getPolyFormula(SAKCRCInterface::CRCModel model)
     case CRC_16_CCITT_FALSE:
     case CRC_16_x25:
     case CRC_16_XMODEM:
-        formula = QString("x6 + x2 + x5 + 1");
+        polynomial = QString("x6+x2+x5+1");
         break;
     case CRC_16_DNP:
-        formula = QString("x6+x3+x2+x1+x0+x8+x6+x5+x2+1");
+        polynomial = QString("x6+x3+x2+x1+x0+x8+x6+x5+x2+1");
         break;
     case CRC_32:
     case CRC_32_MPEG2:
-        formula = QString("x32+x6+x3+x2+x6+x2+x1+x0+x8+x7+x5+x4+x2+x+1");
+        polynomial = QString("x32+x6+x3+x2+x6+x2+x1+x0+x8+x7+x5+x4+x2+x+1");
+        break;
+    default:
+        polynomial = QString("Error: Polynomial not found");
         break;
     }
 
-    return formula;
+    return polynomial;
 }
 
-uint32_t SAKCRCInterface::getInitValue(SAKCRCInterface::CRCModel model)
+uint32_t QtCRCInterface::initValue(QtCRCInterface::CRCParameterModel model)
 {
     uint32_t init = 0;
 
@@ -106,7 +107,7 @@ uint32_t SAKCRCInterface::getInitValue(SAKCRCInterface::CRCModel model)
     return init;
 }
 
-uint32_t SAKCRCInterface::getPoly(SAKCRCInterface::CRCModel model)
+uint32_t QtCRCInterface::polynomial(QtCRCInterface::CRCParameterModel model)
 {
     uint32_t poly = 0;
 
@@ -143,7 +144,7 @@ uint32_t SAKCRCInterface::getPoly(SAKCRCInterface::CRCModel model)
     return poly;
 }
 
-uint32_t SAKCRCInterface::getXorValue(SAKCRCInterface::CRCModel model)
+uint32_t QtCRCInterface::xorValue(QtCRCInterface::CRCParameterModel model)
 {
     uint32_t value = 0;
 
@@ -181,7 +182,7 @@ uint32_t SAKCRCInterface::getXorValue(SAKCRCInterface::CRCModel model)
     return value;
 }
 
-bool SAKCRCInterface::getInputReversal(SAKCRCInterface::CRCModel model)
+bool QtCRCInterface::isInputReversal(QtCRCInterface::CRCParameterModel model)
 {
     bool reversal = true;
 
@@ -211,7 +212,7 @@ bool SAKCRCInterface::getInputReversal(SAKCRCInterface::CRCModel model)
     return reversal;
 }
 
-bool SAKCRCInterface::getOutputReversal(SAKCRCInterface::CRCModel model)
+bool QtCRCInterface::isOutputReversal(QtCRCInterface::CRCParameterModel model)
 {
     bool reversal = true;
 
@@ -241,7 +242,7 @@ bool SAKCRCInterface::getOutputReversal(SAKCRCInterface::CRCModel model)
     return reversal;
 }
 
-int SAKCRCInterface::getBitsWidth(SAKCRCInterface::CRCModel model)
+int QtCRCInterface::bitsWidth(QtCRCInterface::CRCParameterModel model)
 {
     int ret = -1;
     switch (model) {

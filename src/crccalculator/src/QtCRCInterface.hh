@@ -1,29 +1,27 @@
 ﻿/*
- * Copyright (C) 2018-2019 wuuhii. All rights reserved.
+ * Copyritht 2020 QTCRCCALCULATOR PROJECT <https://github.com/qter188/QtCRCCalculator>
+ * QtCRCCalculator is licensed according to the terms in the file LICENCE in the root of the source code directory.
  *
- * The file is encoding with utf-8 (with BOM). It is a part of QtSwissArmyKnife
- * project. The project is a open source project, you can get the source from:
- *     https://github.com/qter188/QtSwissArmyKnife
- *     https://gitee.com/qter188/QtSwissArmyKnife
+ * The file is encoding with UTF8 (with BOM). Thanks google translation <https://translate.google.cn>.
  *
- * For more information about the project, please join our QQ group(952218522).
- * In addition, the email address of the project author is qter188@outlook.com.
+ * Bug Report: qter@188.com
+ * User Exchange QQ Group: 952218522
+ * Qt Technical Exchange QQ Group: 723516989
  */
-#ifndef SAKCRCINTERFACE_HH
-#define SAKCRCINTERFACE_HH
+#ifndef QTCRCINTERFACE_HH
+#define QTCRCINTERFACE_HH
 
 #include <QObject>
 #include <QStringList>
 
-class SAKCRCInterface:public QObject
+class QtCRCInterface:public QObject
 {
     Q_OBJECT
 public:
-    SAKCRCInterface(QObject *parent = nullptr);
+    explicit QtCRCInterface(QObject *parent = nullptr);
 
-
-    /// crc算法模型（crc参数模型）
-    enum CRCModel{
+    /// \brief crc算法模型（crc参数模型）
+    enum CRCParameterModel{
         CRC_8,
         CRC_8_ITU,
         CRC_8_ROHC,
@@ -42,26 +40,26 @@ public:
         CRC_32,
         CRC_32_MPEG2
     };
-    Q_ENUM(CRCModel)
+    Q_ENUM(CRCParameterModel)
 
     /**
-     * @brief crcCalculate  -- crc计算
+     * @brief calculateCRC  -- crc计算函数，支持的参数模型见CRCParameterModel
      * @param input         -- 输入数据
      * @param length        -- 输入数据长度
      * @param crc           -- crc计算结果
      * @param model         -- crc参数模型
      */
     template<typename T>
-    T crcCalculate(uint8_t *input, uint64_t length, SAKCRCInterface::CRCModel model){
-        T crcReg = static_cast<T>(getInitValue(model));
-        T poly = static_cast<T>(getPoly(model));
+    T calculateCRC(uint8_t *input, uint64_t length, QtCRCInterface::CRCParameterModel model){
+        T crcReg = static_cast<T>(initValue(model));
+        T poly = static_cast<T>(polynomial(model));
         uint8_t byte = 0;
 
         T temp = 1;
         while (length--){
             byte = *(input++);
 
-            if (getInputReversal(model)){
+            if (isInputReversal(model)){
                 reverseInt(byte,byte);
             }
 
@@ -75,15 +73,13 @@ public:
             }
         }
 
-        if (getOutputReversal(model)){
+        if (isOutputReversal(model)){
             reverseInt(crcReg,crcReg);
         }
 
-        T crc = (crcReg ^ static_cast<T>(getXorValue(model))) ;
+        T crc = (crcReg ^ static_cast<T>(xorValue(model))) ;
         return crc;
     }
-
-
 public:
     /**
      * @brief supportedParameterModels  -- 支持的crc参数模型
@@ -92,59 +88,53 @@ public:
     QStringList supportedParameterModels();
 
     /**
-     * @brief getPolyFormula    -- 获取多项式公式
+     * @brief polyFormulaString -- 获取多项式公式
      * @param model             -- crc参数模型
      * @return                  -- 多项式公式
      */
-    QString getPolyFormula(CRCModel model);          
+    QString polyFormulaString(CRCParameterModel model);
 
-public:
     /**
-     * @brief getInitValue  -- 获取crc初始值
+     * @brief initValue     -- 获取crc初始值
      * @param model         -- crc参数模型
      * @return              -- 指定参数模型的crc初始值(根据实际情况进项强制转换)
      */
-    uint32_t getInitValue(SAKCRCInterface::CRCModel model);
+    uint32_t initValue(QtCRCInterface::CRCParameterModel model);
 
     /**
-     * @brief getPoly   -- 获取多项式
+     * @brief polynomial-- 获取多项式
      * @param model     -- crc参数模型
      * @return          -- 执行的参数模型的多项式(根据实际情况进项强制转换)
      */
-    uint32_t getPoly(SAKCRCInterface::CRCModel model);
+    uint32_t polynomial(QtCRCInterface::CRCParameterModel model);
 
     /**
      * @brief xorValue  -- 结果异或值
      * @param model     -- crc参数模型
      * @return          -- 结果异或值
      */
-    uint32_t getXorValue(SAKCRCInterface::CRCModel model);
+    uint32_t xorValue(QtCRCInterface::CRCParameterModel model);
 
     /**
-     * @brief getInputReversal  -- 判断输入是否需要翻转
+     * @brief isInputReversal   -- 判断输入是否需要翻转
      * @param model             -- crc参数模型
      * @return                  -- 输入数据需要翻转返回true，否则返回false
      */
-    bool getInputReversal(SAKCRCInterface::CRCModel model);
+    bool isInputReversal(QtCRCInterface::CRCParameterModel model);
 
     /**
-     * @brief getOutputReversal -- 判断输入是否需要翻转
+     * @brief isOutputReversal  -- 判断输入是否需要翻转
      * @param model             -- crc参数模型
      * @return                  -- 输入数据需要翻转返回true，否则返回false
      */
-    bool getOutputReversal(SAKCRCInterface::CRCModel model);
+    bool isOutputReversal(QtCRCInterface::CRCParameterModel model);
 
     /**
-     * @brief getBitsWidth  -- 获取位宽
+     * @brief bitsWidth     -- 获取位宽
      * @param model         -- 参数模型
      * @return              -- 位宽
      */
-    int getBitsWidth(SAKCRCInterface::CRCModel model);
-
-
-private:
-    QStringList modelStrings;
-
+    int bitsWidth(QtCRCInterface::CRCParameterModel model);
 private:
     /**
      * @brief reverseInt    -- 将一个整数按位反转
